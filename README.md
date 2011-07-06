@@ -1,30 +1,36 @@
 #PHP Eventbrite API Client Library
 ----------------------------------
+# Requirements:
+## API key
+Eventbrite API keys are available here: http://www.eventbrite.com/api/key/
+## User key
+Eventbrite User_keys are optional.  They are only required if you need to access private data.  Eventbrite users can find their user_key here: 
+http://www.eventbrite.com/userkeyapi
 
-Example use:
+# Examples #
+## Require the API Client code
 
-	<?php
-		require 'Eventbrite.php';
+    require 'Eventbrite.php';
 
-        // Initialize the client by adding your app_key and user_key below.
-        // API keys are available here: http://www.eventbrite.com/api/key/
-        // User keys are available to authenticated users here: http://www.eventbrite.com/userkeyapi
-		$eb_client = new Eventbrite( 'APP_KEY', 'USER_KEY' );
+## Initialize the client
 
-        // request an event by adding a valid EVENT_ID value here:
-		$resp = $eb_client->event_get( array('id' => 'EVENT_ID') );
+    // add your authentication tokens below:
+    $eb_client = new Eventbrite( 'APP_KEY', 'USER_KEY' );
 
-        // here is a basic example of how to use search:
-		$resp = $eb_client->event_search( );
+## event_get example
 
-        // ...and an advanced example using search:
-        $search_params = array(
-          'max' => 2,
-          'city' => 'San Francisco',
-          'region' => 'CA',
-          'country' => 'US'
-        );
-		$resp = $eb_client->event_search( $search_params );
-	?>
+    // request an event by adding a valid EVENT_ID value here:
+	$resp = $eb_client->event_get( array('id' => 'EVENT_ID') );
 
+## event_search example
+
+    $search_params = array(
+        'max' => 2,
+        'city' => 'San Francisco',
+        'region' => 'CA',
+        'country' => 'US'
+    );
+	$resp = $eb_client->event_search( $search_params );
+
+## More info about available API methods
 Eventbrite API documentation:  http://developer.eventbrite.com/doc
