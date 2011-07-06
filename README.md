@@ -4,12 +4,12 @@
 Example use:
 
 	<?php
-		require 'EBAPI.class.php';
+		require 'Eventbrite.php';
 
         // Initialize the client by adding your app_key and user_key below.
         // API keys are available here: http://www.eventbrite.com/api/key/
         // User keys are available to authenticated users here: http://www.eventbrite.com/userkeyapi
-		$eb_client = new EBAPI( 'APP_KEY', 'USER_KEY' );
+		$eb_client = new Eventbrite( 'APP_KEY', 'USER_KEY' );
 
         // request an event by adding a valid EVENT_ID value here:
 		$resp = $eb_client->event_get( array('id' => 'EVENT_ID') );
