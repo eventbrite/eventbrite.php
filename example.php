@@ -15,11 +15,11 @@ $app_key = 'YOUR_APP_KEY';
 $user_key = 'YOUR_USER_KEY';
 
 // Initialize the API client
-$eb_client = new Eventbrite( $app_key, $user );
+$eb_client = new Eventbrite( $app_key, $user_key );
 
 // event_get example - http://developer.eventbrite.com/doc/events/event_get/
-$resp = $eb_client->event_get( array('id'=>'1501016581') );
-var_dump( $resp);
+$resp = $eb_client->event_get( array('id'=>'1501016582') );
+print( Eventbrite::ticketWidget($resp->event) );
 
 // event_search example - http://developer.eventbrite.com/doc/events/event_search/
 $search_params = array(

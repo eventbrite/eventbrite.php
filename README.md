@@ -22,6 +22,9 @@ http://www.eventbrite.com/userkeyapi
     // request an event by adding a valid EVENT_ID value here:
 	$resp = $eb_client->event_get( array('id' => 'EVENT_ID') );
 
+    // print a ticket widget for the event:
+    print( Eventbrite::ticketWidget($resp->event) );
+
 ### event_search example ###
 
     $search_params = array(
