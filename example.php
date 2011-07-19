@@ -17,8 +17,10 @@ $user_key = 'YOUR_USER_KEY';
 // Initialize the API client
 $eb_client = new Eventbrite( $app_key, $user_key );
 
+// For more information about the features that are available through the Eventbrite API, see http://developer.eventbrite.com/doc/
+
 // event_get example - http://developer.eventbrite.com/doc/events/event_get/
-$resp = $eb_client->event_get( array('id'=>'1501016582') );
+$resp = $eb_client->event_get( array('id'=>'1848891083') );
 print( Eventbrite::ticketWidget($resp->event) );
 
 // event_search example - http://developer.eventbrite.com/doc/events/event_search/
@@ -29,7 +31,22 @@ $search_params = array(
   'country' => 'US'
 );
 $resp = $eb_client->event_search($search_params);
-var_dump( $resp);
 
-// For more information about the features that are available through the Eventbrite API, see http://developer.eventbrite.com/doc/
-?>
+// user_list_events example
+$user_resp = $eb_client->user_list_events();
+
+//mark-up the list of events that were requested 
+// render in html - ?>
+
+<h1>Search Results:</h1>
+<?= Eventbrite::eventList( $resp, 'eventListRow'); ?>
+
+<br/> <hr/> <br/>
+
+<h1>Ticket Widgets:</h1>
+<?= Eventbrite::eventList( $resp, 'ticketWidget');?>
+
+<br/> <hr/> <br/>
+
+<h1>My Event List:</h1>
+<?= Eventbrite::eventList( $user_resp, 'buttonWidget' ) ;?> 
