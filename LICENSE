@@ -1,5 +1,5 @@
 MIT License
-Copyright (c) 2011 -  
+Copyright (c) 2011 - Ryan Jarvinen <ryanj@eventbrite.com> 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,7 @@ https://github.com/ryanjarvinen/eventbrite.php
 
 Author: @ryanjarvinen
 
-------------------
+-------------------
 Attribution notice:
 This work was originally derived from Stas Sușcov's php-eventbrite - 
 https://github.com/stas/php-eventbrite (Copyright (c) 2011 Stas Sușcov)
