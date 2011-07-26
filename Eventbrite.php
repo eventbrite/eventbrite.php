@@ -75,41 +75,37 @@ class Eventbrite {
 	function __call( $method, $args ) {
 		
 		// Build query
-		$query_data = array();
+		$params = array();
 		
 		// Add auth to querystring
 		if( isset($this->app_key ))
-		    $query_data['app_key'] = $this->app_key;
+		    $params['app_key'] = $this->app_key;
 		if( isset($this->user_key ))
-			$query_data['user_key'] = $this->user_key;
+			$params['user_key'] = $this->user_key;
 		elseif( isset( $this->username ) && isset( $this->password )) {
-			$query_data['user'] = $this->username;
-			$query_data['password'] = $this->password;
+			$params['user'] = $this->username;
+			$params['password'] = $this->password;
 		}
 
 		// Unpack our arguments
 		if( is_array( $args ) && array_key_exists( 0, $args ) && is_array( $args[0]) )
-			$query_data = array_merge( $query_data, $args[0]);
+			$params = array_merge( $params, $args[0]);
 		
-		// Build the http query url
-		$query_url = $this->api_url;
-		$query_url['path'] .= $method . '?';
-		$http_query = $query_url['scheme'] . '://';
-		$http_query .= $query_url['host'] . $query_url['path'] ;
-		$http_query .= http_build_query( $query_data, '', '&' );
+		// Build our request url 
+		$request_url = $this->api_url['scheme']."://".$this->api_url['host'].$this->api_url['path'].$method.'?'.http_build_query( $params,'','&');
 		
 		// Call the API
-		$response = file_get_contents( $http_query );
+		$resp = file_get_contents( $request_url );
 		
-        // parse our response
-		if( $response ){
-			$response = json_decode( $response );
+        // parse our resp
+		if( $resp ){
+			$resp = json_decode( $resp );
 		
-    		if( isset( $response->error ) && isset($response->error->error_message) ){
-	    		throw new Exception( $response->error->error_message );
+    		if( isset( $resp->error ) && isset($resp->error->error_message) ){
+	    		throw new Exception( $resp->error->error_message );
             }
         }
-		return $response;
+		return $resp;
 	}
 
     /*
@@ -126,8 +122,13 @@ class Eventbrite {
     }
 
     public static function eventListRow( $evnt ) {
-        $date = date_parse($evnt->start_date);
-        return "<div class='eb_event_list_item' id='evnt_div_" . $evnt->id ."'><a href='".$evnt->url."'>".$evnt->title."</a><span class='eb_event_list_date'>" . $date['month'] . '/' . $date['day'] .  '/' .  $date['year'] .  "</span>" . self::buttonWidget($evnt) . "</div>\n";
+        $time = strtotime($evnt->start_date);
+        $venue_name = 'online';
+        if( isset($evnt->venue) && isset( $evnt->venue->name )){
+            $venue_name = $evnt->venue->name;
+        }
+
+        return "<div class='eb_event_list_item' id='evnt_div_" . $evnt->id ."'><span class='eb_event_list_date'>" . strftime('%a, %B %e', $time) . "</span><span class='eb_event_list_time'>" . strftime('%l:%M %P', $time) . "</span>" ."<a class='eb_event_list_title' href='".$evnt->url."'>".$evnt->title."</a><span class='eb_event_list_location'>" . $venue_name . "</span></div>\n";
     }
 
     public static function ticketWidget( $evnt ) {
