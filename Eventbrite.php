@@ -1,32 +1,7 @@
 <?php
-/*
-    MIT License
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-    THE SOFTWARE.
-
-    The latest version of this API client is available here:
-    https://github.com/ryanjarvinen/eventbrite.php
-
-    Maintainer: @ryanjarvinen
-    Contributors: Stas Sușcov
-*/
-
 class Eventbrite {
     /**
-     * Default Eventbrite API endpoint
+     * Eventbrite API endpoint
      */
     var $api_endpoint = "https://www.eventbrite.com/json/";
 
@@ -36,22 +11,9 @@ class Eventbrite {
      * Eventbrite user_key (OPTIONAL, only needed for reading/writing private user data)
      *     http://www.eventbrite.com/userkeyapi
      *
-     * Alternate athentication parameters:
+     * Alternate authorization parameters (instead of user_key):
      *   Eventbrite user email
      *   Eventbrite user password
-     */
-
-    /**
-     * Constructor to initialize the object
-     *
-     * @param String $api_key, your Eventbrite application key
-     * @param String $user, your Eventbrite user_key
-     *
-     * OR
-     *
-     * @param String $api_key, your Eventbrite application key
-     * @param String $user, the Eventbrite user's email address
-     * @param String $password, the Eventbrite user's password
      */
     function Eventbrite( $app_key = null, $user = null, $password = null ) {
         $this->api_url = parse_url($this->api_endpoint);
