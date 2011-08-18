@@ -15,42 +15,50 @@ class Eventbrite {
      *   Eventbrite user email
      *   Eventbrite user password
      */
-    function Eventbrite( $app_key = null, $user = null, $password = null ) {
+    function Eventbrite( $tokens = null, $user = null, $password = null ) {
         $this->api_url = parse_url($this->api_endpoint);
-        $this->app_key = $app_key;
-        if( $password ){
-          $this->username = $user;
-          $this->password = $password;
-        }
-        else {
-          $this->user_key = $user;
+        $this->auth_tokens = array();
+        if(is_array($tokens)){
+            $this->auth_tokens = $tokens;
+        }else{
+            $this->auth_tokens['app_key'] = $tokens;
+            if( $password ){
+                $this->auth_tokens['user'] = $user;
+                $this->auth_tokens['password'] = $password;
+            }
+            else {
+              $this->auth_tokens['user_key'] = $user;
+            }
         }
     }
 
     // For information about available API methods, see: http://developer.eventbrite.com/doc/
     function __call( $method, $args ) {  
-        // Build query
-        $params = array();
-        
-        // Add auth to querystring
-        if( isset($this->app_key ))
-            $params['app_key'] = $this->app_key;
-        if( isset($this->user_key ))
-            $params['user_key'] = $this->user_key;
-        elseif( isset( $this->username ) && isset( $this->password )) {
-            $params['user'] = $this->username;
-            $params['password'] = $this->password;
-        }
-
         // Unpack our arguments
-        if( is_array( $args ) && array_key_exists( 0, $args ) && is_array( $args[0]) )
-            $params = array_merge( $params, $args[0]);
+        if( is_array( $args ) && array_key_exists( 0, $args ) && is_array( $args[0]) ){
+            $params = $args[0];
+        }else{
+            $params = array();
+        }
         
-        // Build our request url 
+        // Add authentication tokens to querystring
+        if(!isset($this->auth_tokens['access_token'])){
+            $params = array_merge($params, $this->auth_tokens);
+        }
+        
+        // Build our request url, urlencode querystring params 
         $request_url = $this->api_url['scheme']."://".$this->api_url['host'].$this->api_url['path'].$method.'?'.http_build_query( $params,'','&');
         
         // Call the API
-        $resp = file_get_contents( $request_url );
+        if(!isset($this->auth_tokens['access_token'])){
+            $resp = file_get_contents( $request_url );
+        }else{
+            $options = array(
+                'http'=>array( 'method'=> 'GET',
+                               'header'=> "Authorization: Bearer " . $this->auth_tokens['access_token'])
+            );
+            $resp = file_get_contents( $request_url, false, stream_context_create($options));
+        }
         
         // parse our response
         if( $resp ){

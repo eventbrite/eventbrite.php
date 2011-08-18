@@ -8,14 +8,15 @@ Eventbrite User_keys are optional.  They are only required if you need to access
 http://www.eventbrite.com/userkeyapi
 
 # Examples: #
-### Require the API Client code ###
+### Load the API Client library ###
 
     require 'Eventbrite.php';
 
-### Initialize the client ###
+### Initialize the client by setting your authentication tokens ###
 
     // add your authentication tokens below:
-    $eb_client = new Eventbrite( 'APP_KEY', 'USER_KEY' );
+    $eb_client = new Eventbrite( array('app_key'=>'YOUR_APP_KEY', 
+                                       'user_key'=>'YOUR_USER_KEY'));
 
 ### event_get example ###
 
