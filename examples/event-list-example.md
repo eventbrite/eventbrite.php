@@ -40,9 +40,22 @@ Now that you have your events, convert them to HTML for display
 
     <?= Eventbrite::eventList( $events, 'eventListRow'); ?>
 
-The resulting HTML should look like this:
+The resulting HTML should look similar to this:
 
-
+    <div class="eb_event_list">
+        <div class='eb_event_list_item' id='evnt_div_1485261457'>
+            <span class='eb_event_list_date'>Tue, May  4</span>
+            <span class='eb_event_list_time'> 1:00 pm</span>
+            <a class='eb_event_list_title' href='http://www.eventbrite.com/event/1485261457'>API_EVENT_TEST2</a>
+            <span class='eb_event_list_location'>my place</span>
+        </div>
+        <div class='eb_event_list_item' id='evnt_div_1472940605'>
+            <span class='eb_event_list_date'>Tue, May  3</span>
+            <span class='eb_event_list_time'> 1:00 pm</span>
+            <a class='eb_event_list_title' href='http://www.eventbrite.com/event/1485261457'>API_EVENT_TEST1</a>
+            <span class='eb_event_list_location'>my place</span>
+        </div>
+    </div>
 
 ##Customize the event listing by adding your own CSS##
 This example stylesheet template should help you get started.
