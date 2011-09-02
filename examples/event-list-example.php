@@ -1,20 +1,17 @@
 <?php
 // load the API Client library
-include "Eventbrite.php"; 
-
-// Eventbrite API / Application key (REQUIRED)
-// http://www.eventbrite.com/api/key/
-$app_key = 'YOUR_APP_KEY';
-     
-// Eventbrite user_key (OPTIONAL, only needed for reading/writing private user data)
-// http://www.eventbrite.com/userkeyapi
-$user_key = 'YOUR_USER_KEY';
+include "../Eventbrite.php"; 
 
 // Initialize the API client
-$eb_client = new Eventbrite( $app_key, $user_key );
+//  Eventbrite API / Application key (REQUIRED)
+//   http://www.eventbrite.com/api/key/
+//  Eventbrite user_key (OPTIONAL, only needed for reading/writing private user data)
+//   http://www.eventbrite.com/userkeyapi
+$authentication_tokens = array('app_key'  => 'YOUR_APP_KEY',
+                               'user_key' => 'YOUR_USER_KEY');
+$eb_client = new Eventbrite( $authentication_tokens );
 
 // For more information about the features that are available through the Eventbrite API, see http://developer.eventbrite.com/doc/
-
 $events = $eb_client->user_list_events();
 
 //mark-up the list of events that were requested 
