@@ -90,7 +90,7 @@ A [working example page based on this guide](https://raw.github.com/ryanjarvinen
 ##Additional event list customization##
 If this guide's resulting HTML event list does not meet your needs, you can always define your own custom function, and then pass it to `Eventbrite::eventList()` to convert each event into whatever you like.  Here is an example demonstrating how that might work -
 
-Define your custom rendering function:
+First, define your own custom HTML rendering function:
 
     $custom_render_function = function($evnt){
         $time = strtotime($evnt->start_date);
