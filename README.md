@@ -36,6 +36,9 @@ http://www.eventbrite.com/userkeyapi
     );
 	$resp = $eb_client->event_search( $search_params );
 
+### Rendering lists of events as HTML ###
+If you are planning to use PHP to help keep your site's event listing up to date, take a look at this guide: [https://github.com/ryanjarvinen/eventbrite.php/blob/master/examples/event-list-example.md](https://github.com/ryanjarvinen/eventbrite.php/blob/master/examples/event-list-example.md)
+
 ## More information about available API methods
 Eventbrite API documentation:  http://developer.eventbrite.com/doc
 
