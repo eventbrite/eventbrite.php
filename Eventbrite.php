@@ -76,10 +76,18 @@ class Eventbrite {
      */
     public static function eventList($evnts = array(), $mode = 'eventListRow') {
         $html='<div class="eb_event_list">';
-        foreach( $evnts->events as $evnt ){
-            if( isset($evnt->event ) ){
-                $html .= self::$mode($evnt->event);
+        if( isset($evnts->events)){
+            foreach( $evnts->events as $evnt ){
+                if( isset($evnt->event ) ){
+                     if(is_callable($mode)){
+                         $html .= $mode($evnt->event);
+                     }else if(is_callable( array(self, $mode))){
+                         $html .= self::$mode($evnt->event);
+                     }
+                }
             }
+        }else{
+            $html .= "No events were found at this time.";
         }
         return $html . "</div>";
     }

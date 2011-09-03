@@ -40,7 +40,7 @@ Now that you have your events, convert them to HTML for display
 
     <?= Eventbrite::eventList( $events, 'eventListRow'); ?>
 
-The resulting HTML should look similar to this:
+The resulting HTML output should look similar to this:
 
     <div class="eb_event_list">
         <div class='eb_event_list_item' id='evnt_div_1485261457'>
@@ -83,7 +83,22 @@ This example stylesheet template should help you get started.
     }
     </style>
 
-##Additional event list customization##
-If this guide's resulting HTML event list does not meet your needs, you can always create your own function to convert the API responses into HTML.
+##Done!##
+That should be all the information that you will need to create your own automatically-updated event listing on your PHP-based site.
+A [working example page based on this guide](https://raw.github.com/ryanjarvinen/eventbrite.php/master/examples/event-list-example.php) should come bundled with the API client.  You will just need to add your authentication tokens in order to get it working.
 
-... more information coming soon ...
+##Additional event list customization##
+If this guide's resulting HTML event list does not meet your needs, you can always define your own custom function, and then pass it to Eventbrite::eventList() to convert each event into whatever you like.  
+
+Here is an example of how that might work:
+
+    $custom_render_function = function($evnt){
+        $time = strtotime($evnt->start_date);
+        if( isset($evnt->venue) && isset( $evnt->venue->name )){ 
+            $venue_name = $evnt->venue->name;
+        }else{
+            $venue_name = 'online';
+        }   
+        return "<div class='eb_event_list_item' id='evnt_div_" . $evnt->id ."'><span class='eb_event_list_date'>" . strftime('%a, %B %e', $time) . "</span><span class='eb_event_list_time'>" . strftime('%l:%M %P', $time) . "</span>" ."<a class='eb_event_list_title' href='".$evnt->url."'>".$evnt->title."</a><span class='eb_event_list_location'>" . $venue_name . "</span></div>\n";
+    }
+    $event_list_html = Eventbrite::eventList( $events, $custom_render_function);
