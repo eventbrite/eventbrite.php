@@ -99,6 +99,12 @@ Here is an example of how that might work:
         }else{
             $venue_name = 'online';
         }   
-        return "<div class='eb_event_list_item' id='evnt_div_" . $evnt->id ."'><span class='eb_event_list_date'>" . strftime('%a, %B %e', $time) . "</span><span class='eb_event_list_time'>" . strftime('%l:%M %P', $time) . "</span>" ."<a class='eb_event_list_title' href='".$evnt->url."'>".$evnt->title."</a><span class='eb_event_list_location'>" . $venue_name . "</span></div>\n";
+        $event_html = "<div class='eb_event_list_item' id='evnt_div_"
+                    . $evnt->id ."'><span class='eb_event_list_date'>"
+                    . strftime('%a, %B %e', $time) . "</span><span class='eb_event_list_time'>" 
+                    . strftime('%l:%M %P', $time) . "</span><a class='eb_event_list_title' href='"
+                    . $evnt->url."'>".$evnt->title."</a><span class='eb_event_list_location'>"
+                    . $venue_name . "</span></div>\n";
+        return $event_html;
     }
     $event_list_html = Eventbrite::eventList( $events, $custom_render_function);
