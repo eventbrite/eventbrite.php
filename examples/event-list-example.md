@@ -88,10 +88,9 @@ That should be all the information that you will need to create your own automat
 A [working example page based on this guide](https://raw.github.com/ryanjarvinen/eventbrite.php/master/examples/event-list-example.php) should come bundled with the API client.  You will just need to add your authentication tokens in order to get it working.
 
 ##Additional event list customization##
-If this guide's resulting HTML event list does not meet your needs, you can always define your own custom function, and then pass it to Eventbrite::eventList() to convert each event into whatever you like.  
+If this guide's resulting HTML event list does not meet your needs, you can always define your own custom function, and then pass it to Eventbrite::eventList() to convert each event into whatever you like.  Here is an example demonstrating how that might work -
 
-Here is an example of how that might work:
-
+Define your custom rendering function:
     $custom_render_function = function($evnt){
         $time = strtotime($evnt->start_date);
         if( isset($evnt->venue) && isset( $evnt->venue->name )){ 
@@ -107,4 +106,6 @@ Here is an example of how that might work:
                     . $venue_name . "</span></div>\n";
         return $event_html;
     }
+
+Then, use it to convert your events into HTML:
     $event_list_html = Eventbrite::eventList( $events, $custom_render_function);
