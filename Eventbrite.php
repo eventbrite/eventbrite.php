@@ -74,15 +74,23 @@ class Eventbrite {
     /*
      * Widgets:
      */
-    public static function eventList($evnts = array(), $mode = 'eventListRow') {
+    public static function eventList($evnts= array(), $callback='eventListRow', $options=false) {
         $html='<div class="eb_event_list">';
         if( isset($evnts->events)){
             foreach( $evnts->events as $evnt ){
                 if( isset($evnt->event ) ){
-                     if(is_callable($mode)){
-                         $html .= $mode($evnt->event);
-                     }else if(is_callable( array(self, $mode))){
-                         $html .= self::$mode($evnt->event);
+                     if(is_callable($callback)){
+                         if($options){
+                             $html .= $callback($evnt->event, $options);
+                         }else{
+                             $html .= $callback($evnt->event);
+                         }
+                     }else if(is_callable( array('self', $callback))){
+                         if($options){
+                             $html .= self::$callback($evnt->event, $options);
+                         }else{
+                             $html .= self::$callback($evnt->event);
+                         }
                      }
                 }
             }
