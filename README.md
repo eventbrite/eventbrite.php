@@ -17,6 +17,8 @@ http://www.eventbrite.com/userkeyapi
     // add your authentication tokens below:
     $eb_client = new Eventbrite( array('app_key'=>'YOUR_APP_KEY', 
                                        'user_key'=>'YOUR_USER_KEY'));
+## Documentented API methods will be availabe on the client object ##
+See Eventbrite's [API Docs](http://developer.eventbrite.com/doc) for more information about the available method calls.  Request parameters should be encapsulated in an array of key/value pairs as in the examples below:
 
 ### event_get example ###
 
@@ -35,6 +37,21 @@ http://www.eventbrite.com/userkeyapi
         'country' => 'US'
     );
 	$resp = $eb_client->event_search( $search_params );
+
+### event_create exmaple ###
+
+    $new_event_params = array(
+        'title' => 'My test event',
+        'description' => 'testing event creation, remember not to set the privacy or visibility of test events to "public".',
+        'start_date' => date('Y-m-d H:i:s', time() + (7 * 24 * 60 * 60)),
+        'end_date' => date('Y-m-d H:i:s', time() + (7 * 24 * 60 * 60) + (2 * 60 * 60) )
+    );
+    try{
+        $response = $eb_client->event_new($new_event_params);
+    }catch( Exception $e ){
+        // application-specific error handling goes here
+        $response = $e->error;
+    }
 
 ### Rendering lists of events as HTML ###
 If you are planning to use PHP to help keep your site's event listing up to date, take a look at this guide: [https://github.com/ryanjarvinen/eventbrite.php/blob/master/examples/event-list-example.md](https://github.com/ryanjarvinen/eventbrite.php/blob/master/examples/event-list-example.md)
