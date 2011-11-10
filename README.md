@@ -18,11 +18,12 @@ http://www.eventbrite.com/userkeyapi
     $eb_client = new Eventbrite( array('app_key'=>'YOUR_APP_KEY', 
                                        'user_key'=>'YOUR_USER_KEY'));
 
-#### OAuth2.0 Authentication support ####
+### Initialization using OAuth2.0 tokens ###
 
     // You can also initialize the API client with an OAuth2.0 "access_token":
     $eb_client = new Eventbrite( array('access_token'=>'YOUR_ACCESS_TOKEN')); 
-    // Or, with an intermediary OAuth2.0 "access_code" (which will be exchanged for an access_token automatically)
+    // Or, with an intermediary OAuth2.0 "access_code" 
+    // (which will automaticaly be exchanged for an OAuth2.0 access_token)
     $eb_client = new Eventbrite(array('app_key'=>'YOUR_API_KEY', 
                                       'client_secret'=>'YOUR_CLIENT_SECRET',
                                       'access_code'=>'YOUR_ACCESS_CODE' )); 
