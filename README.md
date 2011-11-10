@@ -23,13 +23,13 @@ You can also initialize the API client with an OAuth2.0 "access_token":
 
     $eb_client = new Eventbrite( array('access_token'=>'YOUR_ACCESS_TOKEN')); 
 
-Or by using an intermediary OAuth2.0 "access_code", which will automaticaly be exchanged for an OAuth2.0 "access_token" for you:
+Or, initialize the client by using an intermediary OAuth2.0 "access_code", which will automaticaly be exchanged for an OAuth2.0 "access_token":
 
     $eb_client = new Eventbrite(array('app_key'=>'YOUR_API_KEY', 
                                       'client_secret'=>'YOUR_CLIENT_SECRET',
                                       'access_code'=>'YOUR_ACCESS_CODE' )); 
 
-## Documentented API methods will be availabe on the client object ##
+## Documentented API methods will be available on the client object ##
 See Eventbrite's [API Docs](http://developer.eventbrite.com/doc) for more information about the available method calls.  Request parameters should be encapsulated in an array of key/value pairs as in the examples below:
 
 ### event_get example ###
