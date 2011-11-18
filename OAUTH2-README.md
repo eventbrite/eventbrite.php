@@ -40,7 +40,7 @@ See Eventbrite's [API Docs](http://developer.eventbrite.com/doc) for more inform
 The loginWidget method is the quickest way to acheive OAuth2.0 integration for Eventbrite. It includes a lot of great defaults, and the ability to customize when needed.  By default, PHP's $_SESSION store will be used to save your user's access_token.
 
 #### Function overview: ####
-`string <b>Eventbrite::loginWidget</b>( array $options [, callback $get_token, callback $save_token, callback $delete_token, callback $renderer ] )`
+> string <b>Eventbrite::loginWidget</b>( array $options [, callback $get_token, callback $save_token, callback $delete_token, callback $renderer ] )
 
 #### Parameters: ####
 * `options` - (Required) An array containing the following:
