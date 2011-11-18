@@ -113,6 +113,74 @@ class Eventbrite {
     /*
      * Helpers:
      */
+    public static function OAuthLogin($auth_tokens, $save_token, $delete_token){
+        $user = false;
+        $response = array();
+        # Attempt to authenticate this user using an access_token, if provided
+        if( isset($auth_tokens['access_token']) ){
+            try{
+                // Example using an access_token to initialize the API client:
+                $eb = new Eventbrite(array('access_token' => $auth_tokens['access_token']));
+                $user = $eb->user_get()->user;
+            }catch(Exception $e){
+                $user = false;
+                // This token may no longer be valid
+                //   refresh it, or clear it
+                $response['login_error'] = "Access Denied";
+                $delete_token( $auth_tokens['access_token'] );
+            }
+        }
+
+        # We do not have a valid access token for this user so far
+        if( $user == false ){
+            # This user is not yet authenticated - 
+            #    it is their first visit, 
+            #    or they are returning with an access_code that we will exchange for an access_token,
+            #    or they were redirected here after logout
+            if( isset($auth_tokens['access_code']) ){
+                # This user has just authenticated, get their access token and store it
+                try{
+                    $eb = new Eventbrite($auth_tokens );
+                    $response['access_token'] = $eb->auth_tokens['access_token'];
+                    // save this access_token for future use!
+                    $save_token( $response['access_token'] );
+                    header('Location: ' . $_SERVER['PHP_SELF'] );
+                    exit;
+                }catch (Exception $e){
+                    $response['login_error'] = $e->error->error_message;
+                }
+            }else if( isset($auth_tokens['error_message'] )){
+                $response['login_error'] = $auth_tokens['error_message'];
+            }
+        }else if(is_object($user)){
+            $response['user_email'] = $user->email;
+            $response['user_name'] = $user->first_name . ' ' . $user->last_name;
+        }
+        return $response;
+    }
+
+    public static function loginHTML( $params ){
+    // Replace this example with something that works with your Application's templating engine
+        $html = "<div class='eb_login_widget'> <h2>Eventbrite Account Access</h2>";
+        if( isset($params['user_name']) && isset($params['user_email']) && isset($params['logout_link']) ){
+            $html .= "<div><h3>Welcome Back</h3>";
+            $html .= "<p>You are logged in as:<br/>{$params['user_name']}<br/><i>({$params['user_email']})</i></p>";
+            $html .= "<p><a class='button' href='{$params['logout_link']}'>Logout</a></p></div>";
+      
+        }elseif( isset($params['oauth_link']) ){
+            $html .= "<div><h3>Authenticate with Eventbrite</h3>";
+            if(isset($params['login_error'])){
+                $html .= "<p class='error'>{$params['login_error']}</p>";
+            }
+            $html .= "<p>In order to help you manage your events, we will need access to your <a href='http://eventbrite.com'>Eventbrite</a> account data.</p>";
+            $html .= "<p><a class='button' href='{$params['oauth_link']}'>Connect with Eventbrite</a></p></div>";
+        }else{
+            $html .= "<div><h2>Error initializing Eventbrite loginHTML example template.</h2></div>";
+        }  
+        $html .= "</div>";
+        return $html;
+    }
+
     public static function oauthNextStep( $key ) {
         return 'https://www.eventbrite.com/oauth/authorize?response_type=code&client_id='.$key;
     }
@@ -150,10 +218,34 @@ class Eventbrite {
             $venue_name = $evnt->venue->name;
         }
 
+        return "<div class='eb_event_list_item' id='evnt_div_" . $evnt->id ."'><span class='eb_event_list_date'>" . strftime('%a, %B %e', $time) . "</span><span class='eb_event_list_time'>" . strftime('%l:%M %P', $time) . "</span>" ."<a class='eb_event_list_title' href='".$evnt->url."'>".$evnt->title."</a><span class='eb_event_list_location'>" . $venue_name . "</span></div>\n";
+    }
     /*
      * Widgets:
      */
-        return "<div class='eb_event_list_item' id='evnt_div_" . $evnt->id ."'><span class='eb_event_list_date'>" . strftime('%a, %B %e', $time) . "</span><span class='eb_event_list_time'>" . strftime('%l:%M %P', $time) . "</span>" ."<a class='eb_event_list_title' href='".$evnt->url."'>".$evnt->title."</a><span class='eb_event_list_location'>" . $venue_name . "</span></div>\n";
+    public static function loginWidget( $auth_params, $save_access_token, $delete_access_token ){
+        //  Check to see if we have a valid user account:
+        $response = Eventbrite::OAuthLogin($auth_params, $save_access_token, $delete_access_token);
+        $login_params = array();
+        
+        //  package up the data for our view / template:
+        if( is_array($response)){
+            if( isset( $response['user_email']) ){
+                $login_params = array('oauth_link' => Eventbrite::oauthNextStep($auth_params['app_key']),
+                                      'user_name'  => $response['user_name'],
+                                      'user_email' => $response['user_email'],
+                                      'logout_link'=> $_SERVER['PHP_SELF'] . '?logout=true');
+            }else{
+                $login_params = array('oauth_link' => Eventbrite::oauthNextStep($auth_params['app_key']));
+            }
+            if(isset( $response['login_error'])){
+                $login_params['login_error'] = $response['login_error'];
+            }
+        }
+        
+        // view related work:
+        //  render your "template"
+        return Eventbrite::loginHTML( $login_params );  
     }
 
     public static function ticketWidget( $evnt ) {
