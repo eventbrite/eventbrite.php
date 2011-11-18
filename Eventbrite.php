@@ -113,10 +113,23 @@ class Eventbrite {
     /*
      * Helpers:
      */
-    public static function OAuthLogin($auth_tokens, $save_token='saveAccessToken', $delete_token='deleteAccessToken'){
+    public static function OAuthLogin($auth_tokens, $get_token='getAccessToken', $save_token='saveAccessToken', $delete_token='deleteAccessToken'){
         $user = false;
         $response = array();
-        # Attempt to authenticate this user using an access_token, if provided
+        # Attempt to authenticate this user using an access_token, if available
+        if(!isset($auth_tokens['access_token'])){
+            if(is_callable($get_token)){
+                $auth_tokens['access_token'] = $get_token();
+            }elseif(is_callable(array('self',$get_token))){
+                $auth_tokens['access_token'] = self::$get_token();
+            }
+        }
+        if(!isset($auth_tokens['access_code'])){
+            $auth_tokens['access_code'] = isset($_REQUEST['code']) ? $_REQUEST['code'] : null;
+        }
+        if(!isset($auth_tokens['error_message'])){
+            $auth_tokens['error_message'] = isset($_REQUEST['error']) ? $_REQUEST['error'] : null;
+        }
         if( isset($auth_tokens['access_token']) ){
             try{
                 // Example using an access_token to initialize the API client:
@@ -175,17 +188,15 @@ class Eventbrite {
     // Replace this example with something that works with your Application's templating engine
         $html = "<div class='eb_login_widget'> <h2>Eventbrite Account Access</h2>";
         if( isset($params['user_name']) && isset($params['user_email']) && isset($params['logout_link']) ){
-            $html .= "<div><h3>Welcome Back</h3>";
+            $html .= "<div><h5>Welcome Back!</h5>";
             $html .= "<p>You are logged in as:<br/>{$params['user_name']}<br/><i>({$params['user_email']})</i></p>";
             $html .= "<p><a class='button' href='{$params['logout_link']}'>Logout</a></p></div>";
       
         }elseif( isset($params['oauth_link']) ){
-            $html .= "<div><h3>Authenticate with Eventbrite</h3>";
             if(isset($params['login_error'])){
                 $html .= "<p class='error'>{$params['login_error']}</p>";
             }
-            $html .= "<p>In order to help you manage your events, we will need access to your <a href='http://eventbrite.com'>Eventbrite</a> account data.</p>";
-            $html .= "<p><a class='button' href='{$params['oauth_link']}'>Connect with Eventbrite</a></p></div>";
+            $html .= "<p><a class='button' href='{$params['oauth_link']}'>Login with Eventbrite</a></p></div>";
         }else{
             $html .= "<div><h2>Eventbrite widgetHTML template example fail :(</h2></div>";
         }  
@@ -253,9 +264,9 @@ class Eventbrite {
     /*
      * Widgets:
      */
-    public static function loginWidget( $options, $save_access_token='saveAccessToken', $delete_access_token='deleteAccessToken', $render_login_box='widgetHTML' ){
+    public static function loginWidget( $options, $get_access_token='getAccessToken', $save_access_token='saveAccessToken', $delete_access_token='deleteAccessToken', $render_login_box='widgetHTML' ){
         //  Check to see if we have a valid user account:
-        $response = Eventbrite::OAuthLogin($options, $save_access_token, $delete_access_token);
+        $response = Eventbrite::OAuthLogin($options, $get_access_token, $save_access_token, $delete_access_token);
         
         //  package up the data for our view / template:
         $login_params = array();
