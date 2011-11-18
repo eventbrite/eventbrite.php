@@ -124,14 +124,6 @@ class Eventbrite {
                 $auth_tokens['access_token'] = self::$get_token();
             }
         }
-        #automatically pull the access_code from the querysting?
-        if(!isset($auth_tokens['access_code'])){
-            $auth_tokens['access_code'] = isset($_REQUEST['code']) ? $_REQUEST['code'] : null;
-        }
-        #automatically grab errors off the querystring?
-        if(!isset($auth_tokens['error_message'])){
-            $auth_tokens['error_message'] = isset($_REQUEST['error']) ? $_REQUEST['error'] : null;
-        }
         if( isset($auth_tokens['access_token']) ){
             try{
                 // Example using an access_token to initialize the API client:
@@ -190,7 +182,7 @@ class Eventbrite {
     // Replace this example with something that works with your Application's templating engine
         $html = "<div class='eb_login_widget'> <h2>Eventbrite Account Access</h2>";
         if( isset($params['user_name']) && isset($params['user_email']) && isset($params['logout_link']) ){
-            $html .= "<div><h5>Welcome Back!</h5>";
+            $html .= "<div><h3>Welcome Back!</h3>";
             $html .= "<p>You are logged in as:<br/>{$params['user_name']}<br/><i>({$params['user_email']})</i></p>";
             $html .= "<p><a class='button' href='{$params['logout_link']}'>Logout</a></p></div>";
       
@@ -267,7 +259,32 @@ class Eventbrite {
      * Widgets:
      */
     public static function loginWidget( $options, $get_token='getAccessToken', $save_token='saveAccessToken', $delete_token='deleteAccessToken', $render_login_box='widgetHTML' ){
-        //  Check to see if we have a valid user account:
+        if(  ( isset($options['logout_link']) 
+               && $options['logout_link'] == $_SERVER['REQUEST_URI'] )
+          // TODO: add a way to disable this default:
+          || ( isset($_GET['eb_logout'])
+               && $_GET['eb_logout']=="true" )) { 
+
+            // clear this user's access_token -
+            Eventbrite::deleteAccessToken(); 
+            // remove our "logout=true" trigger from the querystring-
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit;
+        }
+        
+        // automatically pull the access_code from the querysting?
+        // TODO: add a way to disable this:
+        if(!isset($options['access_code'] )){
+            $options['access_code'] = isset($_REQUEST['code']) ? $_REQUEST['code'] : null;
+        }
+        // automatically grab errors from the querystring?
+        // TODO: add a way to disable this:
+        if(!isset($options['error_message'])){
+            $options['error_message'] = isset($_REQUEST['error']) ? $_REQUEST['error'] : null;
+        }
+
+        //  Check to see if we have a valid user account
+        //  and Proccess any data-related work:
         $response = Eventbrite::OAuthLogin($options, $get_token, $save_token, $delete_token);
         
         //  package up the data for our view / template:
