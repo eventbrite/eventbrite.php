@@ -18,13 +18,14 @@ $client_secret = 'YOUR_CLIENT_SECRET';
 // should be protected, and should not be exposed to other users.
 
 # 3. Integrate this work into your controller or routing code:
-if( isset($_GET['logout']) && $_GET['logout']=="true" ){ 
+if( isset($_GET['eb_logout']) && $_GET['eb_logout']=="true" ){ 
     // clear this user's access_token -
     Eventbrite::deleteAccessToken(); 
     // remove our "logout=true" trigger from the querystring-
     header("Location: " . $_SERVER['PHP_SELF']);
     exit;
 }
+
 # 4. Update your API_Key's "redirect_uri" setting on http://eventbrite.com/api/key
 // Your redirect_uri should be set to a page on your site where this widget is accessible.
 

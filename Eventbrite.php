@@ -124,9 +124,11 @@ class Eventbrite {
                 $auth_tokens['access_token'] = self::$get_token();
             }
         }
+        #automatically pull the access_code from the querysting?
         if(!isset($auth_tokens['access_code'])){
             $auth_tokens['access_code'] = isset($_REQUEST['code']) ? $_REQUEST['code'] : null;
         }
+        #automatically grab errors off the querystring?
         if(!isset($auth_tokens['error_message'])){
             $auth_tokens['error_message'] = isset($_REQUEST['error']) ? $_REQUEST['error'] : null;
         }
@@ -264,9 +266,9 @@ class Eventbrite {
     /*
      * Widgets:
      */
-    public static function loginWidget( $options, $get_access_token='getAccessToken', $save_access_token='saveAccessToken', $delete_access_token='deleteAccessToken', $render_login_box='widgetHTML' ){
+    public static function loginWidget( $options, $get_token='getAccessToken', $save_token='saveAccessToken', $delete_token='deleteAccessToken', $render_login_box='widgetHTML' ){
         //  Check to see if we have a valid user account:
-        $response = Eventbrite::OAuthLogin($options, $get_access_token, $save_access_token, $delete_access_token);
+        $response = Eventbrite::OAuthLogin($options, $get_token, $save_token, $delete_token);
         
         //  package up the data for our view / template:
         $login_params = array();
@@ -282,7 +284,7 @@ class Eventbrite {
             if(isset( $options['logout_link'])){
                 $login_params['logout_link'] = $options['logout_link'];
             }else{
-                $login_params['logout_link'] = $_SERVER['PHP_SELF'] . '?logout=true';
+                $login_params['logout_link'] = $_SERVER['PHP_SELF'] . '?eb_logout=true';
             }
         }
         
@@ -292,6 +294,10 @@ class Eventbrite {
             return $render_login_box( $login_params );
         }elseif(is_callable(array('self',$render_login_box))){
             return self::$render_login_box( $login_params );  
+        }else{
+            //the templating callback was not valid, 
+            //return the raw data for use with an external template
+            return $login_params;
         }
     }
 
