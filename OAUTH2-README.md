@@ -54,6 +54,20 @@ The loginWidget method is the quickest way to acheive OAuth2.0 integration for E
 * `delete_token` - (Optional) A callback describing how to remove the current user's OAuth2.0 access_token from your site's data store.
 * `renderer` - (Optional) A callback describing how to render the widget data as HTML.  If you have your own templating system that you would like to work with, you can pass the resulting HTML into your template as a string, or set this value to "disabled" to signal that you would like the response to include an array of strings instead of HTML.  For more information on how to write your own render callback, see the widgetHTML function below.  By default, the widgetHTML function will be used to generate HTML for you.
 
+### Eventbrite::widgetHTML ###
+This is the default function for rendering your OAuth2-related strings in HTML.  If you do not like the default HTML, you are welcome to implement your own renderer function based on this method signiture.  See the `renderer` parameter on `Eventbrite::loginWidget` for more information.
+
+#### Function overview: ####
+> string <b>Eventbrite::widgetHTML</b>( array $strings )
+
+#### Parameters: ####
+* `strings` - (Required) An array of strings to render:
+    * `oauth_link` - (Required) A URL for kicking off the OAuth2.0 workflow. See `Eventbrite::oauthNextStep($api_key)` for more information about this value.
+    * `logout_link` - (Required) A URL for deactivating the current user's access_token.
+    * `user_name` - (Optional) A string indicating the current user's name.
+    * `user_email` - (Optional) A string indicating the current user's email address.
+    * `login_error` - (Optional) A string containing an OAuth2.0 error message.
+
 # Resources: #
 * <a href="http://eventbrite.github.com/">Eventbrite on GitHub</a>
 * <a href="http://developer.eventbrite.com/doc/">API Documentation</a>
