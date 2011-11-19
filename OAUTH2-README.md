@@ -33,6 +33,72 @@ Add your authentication tokens to make this widget example work:
 A simple OAuth2 example script is also bundled with our API Client library:
 https://github.com/ryanjarvinen/eventbrite.php/blob/master/examples/oauth2-login-example.php
 
+## Advanced implementation example: ##
+Interested in integrating with your application's existing authentication, storage, and templating systems?  This example goes into additional detail, demonstrating how to set that up.
+
+### 1. Download and install Eventbrite's PHP API client ###
+Grab Eventbrite's latest PHP API client and add it to your app's source code: https://raw.github.com/ryanjarvinen/eventbrite.php/master/Eventbrite.php
+
+### 2. Load the API Client library ###
+
+    require_once 'Eventbrite.php';
+
+### 3. Define data management callbacks ###
+If you do not already have support for session storage enabled, then you may need to turn it on:
+
+    session_start();
+
+Define a callback for looking up access_tokens:
+
+    $get_access_token = function(){
+        if(isset($_SESSION['EB_OAUTH_ACCESS_TOKEN'])){
+            return $_SESSION['EB_OAUTH_ACCESS_TOKEN'];
+        }else{
+            return null;
+        }   
+    }
+
+Define a callback for saving access_tokens for later:
+
+    $save_access_token = function( $access_token ){
+        $_SESSION['EB_OAUTH_ACCESS_TOKEN'] = $access_token;
+    }
+
+Define a callback for removing access_tokens when needed:
+
+    $delete_access_token = function( $access_token=null ){
+        unset($_SESSION['EB_OAUTH_ACCESS_TOKEN']);
+    }
+
+### 4. Integrate with your existing authentication logout url (optional) ###
+Add the following to your logout() code to clear the existing access_token:
+
+    Eventbrite::deleteAccessToken();
+
+Or, use your own $delete_access_token callback when appropriate:
+
+    $delete_access_token();
+
+### 5. Generate the Eventbrite LoginWidget strings ###
+Add your authentication tokens and logout url to make this example work:
+
+    $strings = Eventbrite::loginWidget(array('app_key'=>'YOUR_API_KEY', 
+                                       'client_secret'=>'YOUR_CLIENT_SECRET',
+                                         'logout_link'=>'YOUR_LOGOUT_URL' ),
+                                       $get_access_token,
+                                       $save_access_token,
+                                       $delete_access_token,
+                                       "disabled"); // leave this HTML
+
+### 6. Render your template or view: ###
+If you would like to use the HTML template from our example, you can remove the "disabled" flag from the loginWidget call, or pass the resulting strings to our `Eventbrite::widgetHTML()` function, like this:
+
+    $widget_html = Eventbrite::widgetHTML($strings);
+
+You can also supply your own templating callback function to loginWidget, or simply pass the returned strings directly into your own templating system.
+
+For more detail on our available OAuth2.0 integration functions - see the docs below, or [reach out to the Eventbrite team with questions](http://developer.eventbrite.com/contact-us/)
+
 ## API Client methods for working with OAuth2.0 ##
 See Eventbrite's [API Docs](http://developer.eventbrite.com/doc) for more information about available API Client methods.
 
