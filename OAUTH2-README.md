@@ -74,6 +74,31 @@ This is the default function for rendering your OAuth2-related strings in HTML. 
 #### Response: ####
 This function returns the widget's HTML as a string.
 
+### Eventbrite::OAuthLogin() ###
+This function handles all of the logic around access_token retrieval, and it carries out related data-management tasks by taking advantage of the available callback functions.  If you want to use your own routing, storage, and templating tools, then this lower-level function is an alternative to our `loginWidget`.  It makes less assumptions about your system configuration.
+
+#### Function overview: ####
+> array <b>Eventbrite::OAuthLogin</b>( array $options, [, callback $get_token, callba    ck $save_token, callback $delete_token ]) 
+
+#### Parameters: ####
+* `options` - (Required) An array containing the following:
+    * `app_key` - (Required) A string containing your API key - sign up here: http://www.eventbrite.com/api/key/
+    * `client_secret` - (Required) A string containing this API key's client_secret (available on the same page as your API Key)
+    * `access_token` - (Optional) A string containing the user's access_token can be supplied here.  We will attempt to automatically store this token for later use, by taking advantage of the supplied `save_token` callback.
+    * `access_code` - (Optional) A string containing the user's access_code. An OAuth2.0 access_code is an intermediary, temporary token that can be exchanged for an access_token.  If you know the access_code, you can supply it here.
+    * `logout_link` - (Optional) A string containing the URL that should trigger a "logout" or "deleteToken" action.  By default, the widget is configured to delete a user's access_token whenever the querystring contains "eb_logout=true".  This should work on any page where the widget is available.  See our "Advanced implementation" example for information on how to incorporate this into your existing authentication scheme.
+    * `error_message` - (Optional) A string containing an OAuth2.0-related error message.
+* `get_token` - (Optional) A callback describing how to retrieve the current user's OAuth2.0 access_token from your site's data store.
+* `save_token` - (Optional) A callback describing how to save the current user's OAuth2.0 access_token in your site's data store.
+* `delete_token` - (Optional) A callback describing how to remove the current user's OAuth2.0 access_token from your site's data store.
+
+#### Response: ####
+This function returns an array of strings containing the following values:
+* `access_token` - if available, this string will contain the current user's access_token
+* `user_name` - if available, this string will contain the current user's name
+* `user_email` - if available, this string will contain the current user's email address.
+* `login_error` - if available, this string will contain a login_error from the API.
+
 # Resources: #
 * <a href="http://eventbrite.github.com/">Eventbrite on GitHub</a>
 * <a href="http://developer.eventbrite.com/doc/">API Documentation</a>
