@@ -29,6 +29,8 @@ Or, initialize the client by using an intermediary OAuth2.0 "access_code", which
                                       'client_secret'=>'YOUR_CLIENT_SECRET',
                                       'access_code'=>'YOUR_ACCESS_CODE' )); 
 
+For more information and usage examples regarding OAuth2.0, see our [OAUTH2-README.md](https://github.com/ryanjarvinen/eventbrite.php/blob/master/OAUTH2-README.md)
+
 ## Documentented API methods will be available on the client object ##
 See Eventbrite's [API Docs](http://developer.eventbrite.com/doc) for more information about the available method calls.  Request parameters should be encapsulated in an array of key/value pairs as in the examples below:
 
