@@ -83,19 +83,19 @@ Or, use your own $delete_access_token callback when appropriate:
 Add your authentication tokens and logout url to make this example work:
 
     $strings = Eventbrite::loginWidget(array('app_key'=>'YOUR_API_KEY', 
-                                       'client_secret'=>'YOUR_CLIENT_SECRET',
-                                         'logout_link'=>'YOUR_LOGOUT_URL' ),
+                                             'client_secret'=>'YOUR_CLIENT_SECRET',
+                                             'logout_link'=>'YOUR_LOGOUT_URL' ),
                                        $get_access_token,
                                        $save_access_token,
                                        $delete_access_token,
-                                       "disabled"); // leave this HTML
+                                       "disabled"); // leave this parameter out for an HTML response.
 
 ### 6. Render your template or view: ###
 If you would like to use the HTML template from our example, you can remove the "disabled" flag from the loginWidget call, or pass the resulting strings to our `Eventbrite::widgetHTML()` function, like this:
 
     $widget_html = Eventbrite::widgetHTML($strings);
 
-You can also supply your own templating callback function to loginWidget, or simply pass the returned strings directly into your own templating system.
+You can also supply your own templating callback function to `Eventbrite::loginWidget`, or simply pass the returned strings directly into your own templating system.
 
 For more detail on our available OAuth2.0 integration functions - see the docs below, or [reach out to the Eventbrite team with questions](http://developer.eventbrite.com/contact-us/)
 
