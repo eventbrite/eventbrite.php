@@ -52,7 +52,7 @@ See Eventbrite's [API Docs](http://developer.eventbrite.com/doc) for more inform
     );
 	$resp = $eb_client->event_search( $search_params );
 
-### event_create exmaple ###
+### event_new example ###
 
     $new_event_params = array(
         'title' => 'My test event',
