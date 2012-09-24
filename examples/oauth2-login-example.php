@@ -16,11 +16,12 @@ require_once "../Eventbrite.php";
 // This line may be needed to enable session support on your server:
 session_start();
 
-// 2. Create a login widget:
+// 2. Create a login widget OR redirect:
+$login_widget_html = Eventbrite::loginWidget(array( 'app_key' => 'YOUR_APP_KEY',
+                                                    'client_secret' => 'YOUR_CLIENT_SECRET'));
 ?>
 <html>
-  <?= Eventbrite::loginWidget(array( 'app_key' => 'YOUR_APP_KEY',
-                               'client_secret' => 'YOUR_CLIENT_SECRET'));?>
+  <?=$login_widget_html?>
 
   <?// -------------- Done! ------------- //
     // Optional debug output - Remove this in your app:
