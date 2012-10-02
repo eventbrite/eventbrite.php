@@ -6,6 +6,7 @@
 // 3. Update your API_Key's "redirect_uri" setting on http://eventbrite.com/api/key.  Point your redirect_uri to the URL on your site where you expect a user to complete their OAuth2.0 authorization.  Or, point it to any URL on your site where our loginWidget is available.
 // 4. Developer terms - To comply with our developer terms, your user's "access_tokens" should be protected, and should not be exposed to other users.
 // 5. Download Eventbrite's PHP API client and add it to your application's source code - https://raw.github.com/ryanjarvinen/eventbrite.php/master/Eventbrite.php
+//    the 'php5-curl' package may also be a requirement
 
 ## Implementing OAuth for Eventbrite in two easy steps: ##
 // 1. load the API Client library:
