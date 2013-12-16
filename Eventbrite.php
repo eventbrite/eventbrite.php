@@ -3,9 +3,9 @@ class Eventbrite {
     /**
      * Eventbrite API endpoint
      */
-    var $api_endpoint = "https://www.eventbrite.com/json/";
-    var $auth_tokens;
-    var $api_url;
+    public $api_endpoint = "https://www.eventbrite.com/json/";
+    public $auth_tokens;
+    public $api_url;
 
     /**
      * Eventbrite API key (REQUIRED)
@@ -17,7 +17,7 @@ class Eventbrite {
      *   Eventbrite user email
      *   Eventbrite user password
      */
-    function __construct( $tokens = null, $user = null, $password = null ) {
+    public function __construct( $tokens = null, $user = null, $password = null ) {
         $this->api_url = parse_url($this->api_endpoint);
         $this->auth_tokens = array();
         if(is_array($tokens)){
@@ -38,7 +38,7 @@ class Eventbrite {
         }
     }
 
-    function oauth_handshake( $tokens ){
+    public function oauth_handshake( $tokens ){
         $params = array(
             'grant_type'=>'authorization_code',
             'client_id'=> $tokens['app_key'],
@@ -74,7 +74,7 @@ class Eventbrite {
     }
 
     // For information about available API methods, see: http://developer.eventbrite.com/doc/
-    function __call( $method, $args ) {
+    public function __call( $method, $args ) {
         // Unpack our arguments
         if( is_array( $args ) && array_key_exists( 0, $args ) && is_array( $args[0]) ){
             $params = $args[0];
@@ -344,5 +344,4 @@ class Eventbrite {
     public static function linkWidget( $evnt, $text=null, $color=null ) {
         return '<a href="http://www.eventbrite.com/event/' . $evnt->id . '?ref=elink" target="_blank" style="color:' . ( $color ? $color : "#000000" ) . ';">' . ( $text ? $text : $evnt->title ) . '</a>';
     }
-};
-?>
+}
